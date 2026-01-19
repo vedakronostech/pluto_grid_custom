@@ -200,10 +200,10 @@ class _PlutoLazyPaginationState extends State<PlutoLazyPagination> {
   @override
   Widget build(BuildContext context) {
     return _PaginationWidget(
-      iconColor: stateManager.style.iconColor,
+      iconColor: stateManager.style.paginationIconColor,
       disabledIconColor: stateManager.style.disabledIconColor,
       activatedColor: stateManager.style.activatedBorderColor,
-      iconSize: stateManager.style.iconSize,
+      iconSize: stateManager.style.paginationIconSize,
       height: stateManager.footerHeight,
       page: _page,
       totalPage: _totalPage,

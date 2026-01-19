@@ -69,9 +69,7 @@ void main() {
       const configurationA = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -83,9 +81,7 @@ void main() {
       const configurationB = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -101,9 +97,7 @@ void main() {
       const configurationA = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -115,9 +109,7 @@ void main() {
       const configurationB = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -133,9 +125,7 @@ void main() {
       const configurationA = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -147,9 +137,7 @@ void main() {
       const configurationB = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: false,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -165,9 +153,7 @@ void main() {
       const configurationA = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -179,9 +165,7 @@ void main() {
       const configurationB = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: false,
         ),
@@ -197,9 +181,7 @@ void main() {
       const configurationA = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),
@@ -211,9 +193,7 @@ void main() {
       const configurationB = PlutoGridConfiguration(
         enableMoveDownAfterSelecting: true,
         enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-        style: PlutoGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
+        style: PlutoGridStyleConfig(),
         scrollbar: PlutoGridScrollbarConfig(
           isAlwaysShown: true,
         ),

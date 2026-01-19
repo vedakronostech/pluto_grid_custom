@@ -249,7 +249,7 @@ void main() {
 
       // then
       expect(found, findsOneWidget);
-      expect(foundWidget.icon, configuration.style.columnContextIcon);
+      expect(foundWidget.icon, configuration.style);
     },
   );
 
@@ -278,7 +278,7 @@ void main() {
 
       // then
       expect(found, findsOneWidget);
-      expect(foundWidget.icon, configuration.style.columnContextIcon);
+      expect(foundWidget.icon, configuration.style);
     },
   );
 
@@ -307,7 +307,7 @@ void main() {
 
       // then
       expect(found, findsOneWidget);
-      expect(foundWidget.icon, configuration.style.columnResizeIcon);
+      expect(foundWidget.icon, configuration.style);
     },
   );
 

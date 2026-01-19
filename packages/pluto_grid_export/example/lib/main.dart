@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:pluto_grid_export/pluto_grid_export.dart' as pluto_grid_export;
 
@@ -19,9 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.dark(),
       home: const MyHomePage(),
     );
   }
@@ -79,34 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
-  void exportToPdf() async {
-    final themeData = pluto_grid_export.ThemeData.withFont(
-      base: pluto_grid_export.Font.ttf(
-        await rootBundle.load('fonts/open_sans/OpenSans-Regular.ttf'),
-      ),
-      bold: pluto_grid_export.Font.ttf(
-        await rootBundle.load('fonts/open_sans/OpenSans-Bold.ttf'),
-      ),
-    );
-
-    var plutoGridPdfExport = pluto_grid_export.PlutoGridDefaultPdfExport(
-      title: "Pluto Grid Sample pdf print",
-      creator: "Pluto Grid Rocks!",
-      format: pluto_grid_export.PdfPageFormat.a4.landscape,
-      themeData: themeData,
-    );
-
-    await pluto_grid_export.Printing.sharePdf(
-      bytes: await plutoGridPdfExport.export(stateManager),
-      filename: plutoGridPdfExport.getFilename(),
-    );
-  }
+  void exportToPdf() async {}
 
   void exportToCsv() async {
     String title = "pluto_grid_export";
 
-    var exported = const Utf8Encoder()
-        .convert(pluto_grid_export.PlutoGridExport.exportCSV(stateManager));
+    var exported = const Utf8Encoder().convert(pluto_grid_export.PlutoGridExport.exportCSV(stateManager));
 
     // use file_saver from pub.dev
     await FileSaver.instance.saveFile("$title.csv", exported, ".csv");
@@ -138,8 +113,29 @@ class _MyHomePageState extends State<MyHomePage> {
               child: PlutoGrid(
                 columns: columns,
                 rows: rows,
+                configuration: PlutoGridConfiguration(
+                  style: const PlutoGridStyleConfig.dark().copyWith(
+                    iconColor: Colors.red,
+                    columnContextIcon: null,
+                    iconSize: 20,
+                    gridBorderColor: Colors.grey,
+                    rowColor: Colors.blue,
+                    activatedColor: Colors.red,
+                    borderColor: Colors.grey,
+                    paginationIconColor: Colors.red,
+                  ),
+                  scrollbar: const PlutoGridScrollbarConfig(
+                    isAlwaysShown: true,
+                    draggableScrollbar: true,
+                    scrollbarThickness: 10,
+                    scrollbarThicknessWhileDragging: 10,
+                    scrollbarRadius: Radius.circular(5),
+                    scrollBarColor: Colors.red,
+                  ),
+                ),
                 onLoaded: (e) {
                   stateManager = e.stateManager;
+                  stateManager.setShowColumnFilter(true);
                 },
               ),
             ),

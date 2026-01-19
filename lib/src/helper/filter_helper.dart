@@ -3,8 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
-typedef SetFilterPopupHandler = void Function(
-    PlutoGridStateManager? stateManager);
+typedef SetFilterPopupHandler = void Function(PlutoGridStateManager? stateManager);
 
 class FilterHelper {
   /// A value to identify all column searches when searching filters.
@@ -41,10 +40,8 @@ class FilterHelper {
   }) {
     return PlutoRow(
       cells: {
-        filterFieldColumn:
-            PlutoCell(value: columnField ?? filterFieldAllColumns),
-        filterFieldType:
-            PlutoCell(value: filterType ?? const PlutoFilterTypeContains()),
+        filterFieldColumn: PlutoCell(value: columnField ?? filterFieldAllColumns),
+        filterFieldType: PlutoCell(value: filterType ?? const PlutoFilterTypeContains()),
         filterFieldValue: PlutoCell(value: filterValue ?? ''),
       },
     );
@@ -97,8 +94,7 @@ class FilterHelper {
               flag,
               compareByFilterType(
                 filterType: filterType!,
-                base: row!.cells[e.cells[filterFieldColumn]!.value]!.value
-                    .toString(),
+                base: row!.cells[e.cells[filterFieldColumn]!.value]!.value.toString(),
                 search: e.cells[filterFieldValue]!.value.toString(),
                 column: foundColumn,
               ),
@@ -139,9 +135,7 @@ class FilterHelper {
         columnField = allField;
       }
 
-      final String filterType =
-          (row.cells[FilterHelper.filterFieldType]!.value as PlutoFilterType)
-              .title;
+      final String filterType = (row.cells[FilterHelper.filterFieldType]!.value as PlutoFilterType).title;
 
       final filterValue = row.cells[FilterHelper.filterFieldValue]!.value;
 
@@ -171,8 +165,7 @@ class FilterHelper {
     }
 
     for (var row in filteredRows) {
-      if (row!.cells[filterFieldColumn]!.value == filterFieldAllColumns ||
-          row.cells[filterFieldColumn]!.value == column.field) {
+      if (row!.cells[filterFieldColumn]!.value == filterFieldAllColumns || row.cells[filterFieldColumn]!.value == column.field) {
         return true;
       }
     }
@@ -447,8 +440,7 @@ class FilterPopupState {
     required List<PlutoColumn> columns,
   }) {
     Map<String, String> columnMap = {
-      FilterHelper.filterFieldAllColumns:
-          configuration.localeText.filterAllColumns,
+      FilterHelper.filterFieldAllColumns: configuration.localeText.filterAllColumns,
     };
 
     columns.where((element) => element.enableFilterMenuItem).forEach((element) {
@@ -532,27 +524,31 @@ class PlutoGridFilterPopupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            color: configuration!.style.iconColor,
-            iconSize: configuration!.style.iconSize,
-            onPressed: handleAddButton,
+          Text(
+            "Filter",
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          IconButton(
-            icon: const Icon(Icons.remove),
-            color: configuration!.style.iconColor,
-            iconSize: configuration!.style.iconSize,
-            onPressed: handleRemoveButton,
-          ),
-          IconButton(
-            icon: const Icon(Icons.clear_sharp),
-            color: Colors.red,
-            iconSize: configuration!.style.iconSize,
-            onPressed: handleClearButton,
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              elevation: 4,
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+                side: BorderSide(color: Colors.greenAccent),
+              ),
+            ),
+            child: const Text(
+              "Apply",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
