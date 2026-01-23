@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var exported = const Utf8Encoder().convert(pluto_grid_export.PlutoGridExport.exportCSV(stateManager));
 
     // use file_saver from pub.dev
-    await FileSaver.instance.saveFile("$title.csv", exported, ".csv");
+    await FileSaver.instance.saveFile(name: title, bytes: exported, fileExtension: ".csv");
   }
 
   @override

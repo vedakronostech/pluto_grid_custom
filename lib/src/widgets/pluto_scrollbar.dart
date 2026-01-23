@@ -28,7 +28,7 @@ const Color _kTrackColor = Color(0x00000000);
 // This is the amount of space from the top of a vertical scrollbar to the
 // top edge of the scrollable, measured when the vertical scrollbar overscrolls
 // to the top.
-// TODO(LongCatIsLooong): fix https://github.com/flutter/flutter/issues/32175
+
 const double _kScrollbarMainAxisMargin = 3.0;
 const double _kScrollbarCrossAxisMargin = 3.0;
 
@@ -1237,7 +1237,7 @@ class _ScrollbarPainter extends ChangeNotifier implements CustomPainter {
     _thumbOffset = thumbOffsetLocal + mainAxisMargin + beforePadding;
 
     // Do not paint a scrollbar if the scroll view is infinitely long.
-    // TODO(Piinks): Special handling for infinite scroll views, https://github.com/flutter/flutter/issues/41434
+    // 
     if (_lastMetrics!.maxScrollExtent.isInfinite) return;
 
     return _paintScrollbar(canvas, size, thumbExtent, _lastAxisDirection!);
@@ -1293,7 +1293,6 @@ class _ScrollbarPainter extends ChangeNotifier implements CustomPainter {
       case PointerDeviceKind.invertedStylus:
       case PointerDeviceKind.unknown:
       default: // ignore: no_default_cases, to allow adding new device types to [PointerDeviceKind]
-        // TODO(moffatman): Remove after landing https://github.com/flutter/flutter/issues/23604
         return interactiveRect.contains(position);
     }
   }
@@ -1328,7 +1327,6 @@ class _ScrollbarPainter extends ChangeNotifier implements CustomPainter {
       case PointerDeviceKind.invertedStylus:
       case PointerDeviceKind.unknown:
       default: // ignore: no_default_cases, to allow adding new device types to [PointerDeviceKind]
-        // TODO(moffatman): Remove after landing https://github.com/flutter/flutter/issues/23604
         return _thumbRect!.contains(position);
     }
   }

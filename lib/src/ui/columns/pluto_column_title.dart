@@ -5,6 +5,8 @@ import 'package:pluto_grid/pluto_grid.dart';
 
 import '../ui.dart';
 
+const double _columnTitleIconGap = 8;
+
 class PlutoColumnTitle extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
 
@@ -337,7 +339,7 @@ class _ColumnWidget extends StatelessWidget {
 
   EdgeInsets get padding => column.titlePadding ?? stateManager.configuration.style.defaultColumnTitlePadding;
 
-  bool get showSizedBoxForIcon => column.isShowRightIcon && (column.titleTextAlign.isRight || stateManager.isRTL);
+  bool get showSizedBoxForIcon => column.isShowRightIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +385,7 @@ class _ColumnWidget extends StatelessWidget {
                         height: height,
                       ),
                     ),
-                    if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
+                    if (showSizedBoxForIcon) SizedBox(width: style.iconSize + _columnTitleIconGap),
                   ],
                 ),
               ),
@@ -514,7 +516,7 @@ class _ColumnTextWidgetState extends PlutoStateWithChange<_ColumnTextWidget> {
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child: Padding(
-              padding: const EdgeInsets.only(left: 55), 
+              padding: const EdgeInsets.only(left: _columnTitleIconGap),
               child: IconButton(
                 icon: Icon(
                   Icons.filter_alt_outlined,
