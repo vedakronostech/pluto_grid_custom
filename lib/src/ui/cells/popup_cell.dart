@@ -27,8 +27,7 @@ abstract class GridPopupProps {
   IconData? get icon;
 }
 
-mixin PopupCellState<T extends PopupCell> on State<T>
-    implements GridPopupProps {
+mixin PopupCellState<T extends PopupCell> on State<T> implements GridPopupProps {
   bool isOpenedPopup = false;
 
   /// If a column field name is specified,
@@ -50,6 +49,9 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   /// Implement a callback function that takes [PlutoGridStateManager] as a parameter.
   CreateFooterCallBack? createFooter;
 
+  /// Mode used for popup grid selection.
+  PlutoGridMode get popupMode => PlutoGridMode.select;
+
   late final TextEditingController textController;
 
   late final FocusNode textFocus;
@@ -58,9 +60,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   void initState() {
     super.initState();
 
-    textController = TextEditingController()
-      ..text =
-          widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+    textController = TextEditingController()..text = widget.column.formattedValueForDisplayInEditing(widget.cell.value);
 
     textFocus = FocusNode(onKeyEvent: _handleKeyboardFocusOnKey);
   }
@@ -83,7 +83,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
 
     PlutoGridPopup(
       context: context,
-      mode: PlutoGridMode.select,
+      mode: popupMode,
       onLoaded: onLoaded,
       onSelected: onSelected,
       columns: popupColumns,
@@ -100,8 +100,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         style: widget.stateManager.configuration.style.copyWith(
           oddRowColor: const PlutoOptional(null),
           evenRowColor: const PlutoOptional(null),
-          gridBorderRadius:
-              widget.stateManager.configuration.style.gridPopupBorderRadius,
+          gridBorderRadius: widget.stateManager.configuration.style.gridPopupBorderRadius,
           defaultColumnTitlePadding: PlutoGridSettings.columnTitlePadding,
           defaultCellPadding: PlutoGridSettings.cellPadding,
           rowHeight: widget.stateManager.configuration.style.rowHeight,
@@ -116,29 +115,25 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       if (fieldOnSelected == null) {
         for (var entry in popupRows[i].cells.entries) {
           if (popupRows[i].cells[entry.key]!.value == widget.cell.value) {
-            event.stateManager.setCurrentCell(
-                event.stateManager.refRows[i].cells[entry.key], i);
+            event.stateManager.setCurrentCell(event.stateManager.refRows[i].cells[entry.key], i);
             break;
           }
         }
       } else {
         if (popupRows[i].cells[fieldOnSelected!]!.value == widget.cell.value) {
-          event.stateManager.setCurrentCell(
-              event.stateManager.refRows[i].cells[fieldOnSelected!], i);
+          event.stateManager.setCurrentCell(event.stateManager.refRows[i].cells[fieldOnSelected!], i);
           break;
         }
       }
     }
 
     if (event.stateManager.currentRowIdx != null) {
-      final rowIdxToMove =
-          event.stateManager.currentRowIdx! + 1 + offsetOfScrollRowIdx;
+      final rowIdxToMove = event.stateManager.currentRowIdx! + 1 + offsetOfScrollRowIdx;
 
       if (rowIdxToMove < event.stateManager.refRows.length) {
         event.stateManager.moveScrollByRow(PlutoMoveDirection.up, rowIdxToMove);
       } else {
-        event.stateManager.moveScrollByRow(
-            PlutoMoveDirection.up, event.stateManager.refRows.length);
+        event.stateManager.moveScrollByRow(PlutoMoveDirection.up, event.stateManager.refRows.length);
       }
     }
   }
@@ -148,9 +143,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
 
     dynamic selectedValue;
 
-    if (event.row != null &&
-        fieldOnSelected != null &&
-        event.row!.cells.containsKey(fieldOnSelected)) {
+    if (event.row != null && fieldOnSelected != null && event.row!.cells.containsKey(fieldOnSelected)) {
       selectedValue = event.row!.cells[fieldOnSelected!]!.value;
     } else if (event.cell != null) {
       selectedValue = event.cell!.value;

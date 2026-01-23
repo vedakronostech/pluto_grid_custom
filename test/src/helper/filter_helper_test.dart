@@ -257,10 +257,7 @@ void main() {
       expect(result.length, 1);
       expect(result, PlutoObjectMatcher<Map<String, List<Map<String, String>>>>(
         rule: (value) {
-          return value.keys.first == 'column' &&
-              value.values.first[0].keys.first ==
-                  PlutoFilterTypeContains.name &&
-              value.values.first[0].values.first == '123';
+          return value.keys.first == 'column' && value.values.first[0].keys.first == PlutoFilterTypeContains.name && value.values.first[0].values.first == '123';
         },
       ));
     });
@@ -498,6 +495,22 @@ void main() {
       });
     });
 
+    group('NotContains', () {
+      late Function compare;
+
+      setUp(() {
+        compare = makeCompareFunction(const PlutoFilterTypeNotContains());
+      });
+
+      test('apple not contains banana', () {
+        expect(compare('apple', 'banana'), isTrue);
+      });
+
+      test('apple is not not contains le', () {
+        expect(compare('apple', 'le'), isFalse);
+      });
+    });
+
     group('Equals', () {
       late Function compare;
 
@@ -696,9 +709,7 @@ void main() {
             columns: columns,
             filterRows: [
               FilterHelper.createFilterRow(
-                columnField: columns[0].enableFilterMenuItem
-                    ? columns[0].field
-                    : FilterHelper.filterFieldAllColumns,
+                columnField: columns[0].enableFilterMenuItem ? columns[0].field : FilterHelper.filterFieldAllColumns,
                 filterType: columns[0].defaultFilter,
               ),
             ],
@@ -905,8 +916,7 @@ void main() {
 
         // configuration 의 필터 수 만큼 생성 되어야 한다. (기본 8개)
         expect(configuration.columnFilter.filters.length, 8);
-        expect(
-            columnType.items.length, configuration.columnFilter.filters.length);
+        expect(columnType.items.length, configuration.columnFilter.filters.length);
 
         // formatter (filter 가 값으로 써 formatter 에서 title 을 반환한다.)
         for (var i = 0; i < configuration.columnFilter.filters.length; i += 1) {

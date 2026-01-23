@@ -53,6 +53,18 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
       return;
     }
 
+    if (stateManager.mode.isPopup && column.type.isSelect && column.field == FilterHelper.filterFieldType) {
+      if (!stateManager.isCurrentCell(cell)) {
+        stateManager.setCurrentCell(cell, rowIdx);
+      }
+
+      if (stateManager.isEditing != true) {
+        stateManager.setEditing(true);
+      }
+
+      return;
+    }
+
     if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
       stateManager.setEditing(true);
     } else {
@@ -196,8 +208,7 @@ enum PlutoGridGestureType {
 
   bool get isOnLongPressStart => this == PlutoGridGestureType.onLongPressStart;
 
-  bool get isOnLongPressMoveUpdate =>
-      this == PlutoGridGestureType.onLongPressMoveUpdate;
+  bool get isOnLongPressMoveUpdate => this == PlutoGridGestureType.onLongPressMoveUpdate;
 
   bool get isOnLongPressEnd => this == PlutoGridGestureType.onLongPressEnd;
 

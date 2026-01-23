@@ -28,8 +28,7 @@ class PlutoSelectCell extends StatefulWidget implements PopupCell {
   PlutoSelectCellState createState() => PlutoSelectCellState();
 }
 
-class PlutoSelectCellState extends State<PlutoSelectCell>
-    with PopupCellState<PlutoSelectCell> {
+class PlutoSelectCellState extends State<PlutoSelectCell> with PopupCellState<PlutoSelectCell> {
   @override
   List<PlutoColumn> popupColumns = [];
 
@@ -39,26 +38,32 @@ class PlutoSelectCellState extends State<PlutoSelectCell>
   @override
   IconData? get icon => widget.column.type.select.popupIcon;
 
+  @override
+  PlutoGridMode get popupMode => _shouldAutoOpenPopup ? PlutoGridMode.selectWithOneTap : PlutoGridMode.select;
+
   late bool enableColumnFilter;
 
   @override
   void initState() {
     super.initState();
 
+    if (_shouldAutoOpenPopup) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || isOpenedPopup) {
+          return;
+        }
+
+        openPopup();
+      });
+    }
+
     enableColumnFilter = widget.column.type.select.enableColumnFilter;
 
-    final columnFilterHeight = enableColumnFilter
-        ? widget.stateManager.configuration.style.columnFilterHeight
-        : 0;
+    final columnFilterHeight = enableColumnFilter ? widget.stateManager.configuration.style.columnFilterHeight : 0;
 
-    final rowsHeight = widget.column.type.select.items.length *
-        widget.stateManager.rowTotalHeight;
+    final rowsHeight = widget.column.type.select.items.length * widget.stateManager.rowTotalHeight;
 
-    popupHeight = widget.stateManager.configuration.style.columnHeight +
-        columnFilterHeight +
-        rowsHeight +
-        PlutoGridSettings.gridInnerSpacing +
-        PlutoGridSettings.gridBorderWidth;
+    popupHeight = widget.stateManager.configuration.style.columnHeight + columnFilterHeight + rowsHeight + PlutoGridSettings.gridInnerSpacing + PlutoGridSettings.gridBorderWidth;
 
     fieldOnSelected = widget.column.title;
 
@@ -82,6 +87,10 @@ class PlutoSelectCellState extends State<PlutoSelectCell>
         },
       );
     }).toList();
+  }
+
+  bool get _shouldAutoOpenPopup {
+    return widget.stateManager.mode.isPopup && widget.column.field == FilterHelper.filterFieldType;
   }
 
   @override

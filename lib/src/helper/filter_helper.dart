@@ -23,6 +23,7 @@ class FilterHelper {
 
   static const List<PlutoFilterType> defaultFilters = [
     PlutoFilterTypeContains(),
+    PlutoFilterTypeNotContains(),
     PlutoFilterTypeEquals(),
     PlutoFilterTypeStartsWith(),
     PlutoFilterTypeEndsWith(),
@@ -240,6 +241,18 @@ class FilterHelper {
     required PlutoColumn column,
   }) {
     return _compareWithRegExp(
+      RegExp.escape(search!),
+      base!,
+    );
+  }
+
+  /// Whether [search] is not contained in [base].
+  static bool compareNotContains({
+    required String? base,
+    required String? search,
+    required PlutoColumn column,
+  }) {
+    return !_compareWithRegExp(
       RegExp.escape(search!),
       base!,
     );
@@ -580,6 +593,18 @@ class PlutoFilterTypeContains implements PlutoFilterType {
   PlutoCompareFunction get compare => FilterHelper.compareContains;
 
   const PlutoFilterTypeContains();
+}
+
+class PlutoFilterTypeNotContains implements PlutoFilterType {
+  static String name = 'Does not contain';
+
+  @override
+  String get title => PlutoFilterTypeNotContains.name;
+
+  @override
+  PlutoCompareFunction get compare => FilterHelper.compareNotContains;
+
+  const PlutoFilterTypeNotContains();
 }
 
 class PlutoFilterTypeEquals implements PlutoFilterType {

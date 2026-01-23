@@ -88,6 +88,69 @@ class PlutoColumnTitleState extends PlutoStateWithChange<PlutoColumnTitle> {
     }
   }
 
+  List<PopupMenuEntry<PlutoGridColumnMenuItem>> _buildFilterMenuItems() {
+    final Color textColor = stateManager.style.cellTextStyle.color!;
+    final localeText = stateManager.localeText;
+
+    return [
+      PopupMenuItem<PlutoGridColumnMenuItem>(
+        value: PlutoGridColumnMenuItem.setFilter,
+        height: 36,
+        child: Text(
+          localeText.setFilter,
+          style: TextStyle(
+            color: textColor,
+            fontSize: 13,
+          ),
+        ),
+      ),
+      PopupMenuItem<PlutoGridColumnMenuItem>(
+        value: PlutoGridColumnMenuItem.resetFilter,
+        height: 36,
+        enabled: stateManager.hasFilter,
+        child: Text(
+          localeText.resetFilter,
+          style: TextStyle(
+            color: stateManager.hasFilter ? textColor : textColor.withValues(alpha: 0.5),
+            fontSize: 13,
+          ),
+        ),
+      ),
+    ];
+  }
+
+  void _showFilterMenu(BuildContext context, Offset position) async {
+    if (!widget.column.enableFilterMenuItem) {
+      return;
+    }
+
+    final selected = await showColumnMenu<PlutoGridColumnMenuItem>(
+      context: context,
+      position: position,
+      backgroundColor: stateManager.style.menuBackgroundColor,
+      items: _buildFilterMenuItems(),
+    );
+
+    if (!context.mounted) {
+      return;
+    }
+
+    switch (selected) {
+      case PlutoGridColumnMenuItem.setFilter:
+        stateManager.showFilterPopup(context, calledColumn: widget.column);
+        break;
+      case PlutoGridColumnMenuItem.resetFilter:
+        stateManager.setFilter(null);
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _handleSecondaryTapDown(TapDownDetails details) {
+    _showFilterMenu(context, details.globalPosition);
+  }
+
   void _handleOnPointDown(PointerDownEvent event) {
     _isPointMoving = false;
 
@@ -126,6 +189,7 @@ class PlutoColumnTitleState extends PlutoStateWithChange<PlutoColumnTitle> {
     final columnWidget = _SortableWidget(
       stateManager: stateManager,
       column: widget.column,
+      onSecondaryTapDown: _handleSecondaryTapDown,
       child: _ColumnWidget(
         stateManager: stateManager,
         column: widget.column,
@@ -297,11 +361,14 @@ class _SortableWidget extends StatelessWidget {
 
   final PlutoColumn column;
 
+  final void Function(TapDownDetails details)? onSecondaryTapDown;
+
   final Widget child;
 
   const _SortableWidget({
     required this.stateManager,
     required this.column,
+    this.onSecondaryTapDown,
     required this.child,
   });
 
@@ -311,16 +378,22 @@ class _SortableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return column.enableSorting
-        ? MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              key: const ValueKey('ColumnTitleSortableGesture'),
-              onTap: onTap,
-              child: child,
-            ),
-          )
-        : child;
+    if (column.enableSorting) {
+      return MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          key: const ValueKey('ColumnTitleSortableGesture'),
+          onTap: onTap,
+          onSecondaryTapDown: onSecondaryTapDown,
+          child: child,
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onSecondaryTapDown: onSecondaryTapDown,
+      child: child,
+    );
   }
 }
 
