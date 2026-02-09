@@ -181,6 +181,14 @@ class FilterHelper {
       height: popupState.height,
       context: popupState.context,
       createHeader: popupState.createHeader,
+      createFooter: (PlutoGridStateManager footerStateManager) {
+        return PlutoGridFilterPopupFooter(
+          stateManager: footerStateManager,
+          configuration: popupState.configuration,
+          handleAddNewFilter: popupState.handleAddNewFilter,
+          popupState: popupState,
+        );
+      },
       columns: popupState.makeColumns(),
       rows: popupState.filterRows,
       configuration: popupState.configuration,
@@ -393,6 +401,7 @@ class FilterPopupState {
     _stateManager = e.stateManager;
 
     _stateManager!.setSelectingMode(PlutoGridSelectingMode.row, notify: false);
+    _stateManager!.setAutoEditing(true, notify: false);
 
     if (_stateManager!.rows.isNotEmpty) {
       _stateManager!.setKeepFocus(true, notify: false);
@@ -414,6 +423,36 @@ class FilterPopupState {
   }
 
   void onChanged(PlutoGridOnChangedEvent e) {
+    // Validate column selection - prevent duplicates
+    if (e.column.field == FilterHelper.filterFieldColumn) {
+      final selectedColumn = e.value as String?;
+      if (selectedColumn != null && selectedColumn != FilterHelper.filterFieldAllColumns) {
+        // Check if this column is already being filtered in another row
+        final otherRowsWithSameColumn = _stateManager!.rows.where((row) {
+          if (row.key == e.row.key) return false; // Skip current row
+          return row.cells[FilterHelper.filterFieldColumn]!.value == selectedColumn;
+        }).toList();
+
+        if (otherRowsWithSameColumn.isNotEmpty) {
+          // Revert the change - column already in use
+          e.row.cells[FilterHelper.filterFieldColumn]!.value = e.oldValue;
+          _stateManager!.notifyListeners();
+
+          // Show a message to the user
+          if (_stateManager!.gridFocusNode.context != null) {
+            ScaffoldMessenger.of(_stateManager!.gridFocusNode.context!).showSnackBar(
+              SnackBar(
+                content: Text('Column "$selectedColumn" is already being filtered'),
+                duration: const Duration(seconds: 2),
+                backgroundColor: Colors.orange,
+              ),
+            );
+          }
+          return;
+        }
+      }
+    }
+
     applyFilter();
   }
 
@@ -448,13 +487,29 @@ class FilterPopupState {
     return _makeFilterColumns(configuration: configuration, columns: columns);
   }
 
+  /// Get list of columns that are already being filtered
+  List<String> getFilteredColumnFields() {
+    if (_stateManager == null) return [];
+    return _stateManager!.rows.map((row) => row.cells[FilterHelper.filterFieldColumn]!.value as String).where((field) => field != FilterHelper.filterFieldAllColumns).toList();
+  }
+
+  /// Get available columns for filtering (excluding already filtered ones)
+  Map<String, String> getAvailableColumnsMap() {
+    final filteredFields = getFilteredColumnFields();
+    Map<String, String> columnMap = {};
+
+    columns.where((element) => element.enableFilterMenuItem && !filteredFields.contains(element.field)).forEach((element) {
+      columnMap[element.field] = element.titleWithGroup;
+    });
+
+    return columnMap;
+  }
+
   Map<String, String> _makeFilterColumnMap({
     required PlutoGridConfiguration configuration,
     required List<PlutoColumn> columns,
   }) {
-    Map<String, String> columnMap = {
-      FilterHelper.filterFieldAllColumns: configuration.localeText.filterAllColumns,
-    };
+    Map<String, String> columnMap = {};
 
     columns.where((element) => element.enableFilterMenuItem).forEach((element) {
       columnMap[element.field] = element.titleWithGroup;
@@ -515,10 +570,6 @@ class PlutoGridFilterPopupHeader extends StatelessWidget {
     this.handleAddNewFilter,
   });
 
-  void handleAddButton() {
-    handleAddNewFilter!(stateManager);
-  }
-
   void handleRemoveButton() {
     if (stateManager!.currentSelectingRows.isEmpty) {
       stateManager!.removeCurrentRow();
@@ -561,6 +612,69 @@ class PlutoGridFilterPopupHeader extends StatelessWidget {
             child: const Text(
               "Apply",
               style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PlutoGridFilterPopupFooter extends StatefulWidget {
+  final PlutoGridStateManager? stateManager;
+  final PlutoGridConfiguration? configuration;
+  final SetFilterPopupHandler? handleAddNewFilter;
+  final FilterPopupState? popupState;
+
+  const PlutoGridFilterPopupFooter({
+    super.key,
+    this.stateManager,
+    this.configuration,
+    this.handleAddNewFilter,
+    this.popupState,
+  });
+
+  @override
+  State<PlutoGridFilterPopupFooter> createState() => _PlutoGridFilterPopupFooterState();
+}
+
+class _PlutoGridFilterPopupFooterState extends State<PlutoGridFilterPopupFooter> {
+  @override
+  Widget build(BuildContext context) {
+    // Check if there are available columns to filter
+    final availableColumns = widget.popupState?.getAvailableColumnsMap() ?? {};
+    final hasAvailableColumns = availableColumns.isNotEmpty;
+
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: widget.configuration?.style.gridBackgroundColor,
+        border: Border(
+          top: BorderSide(
+            color: widget.configuration?.style.borderColor ?? Colors.grey,
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton.icon(
+            onPressed: hasAvailableColumns
+                ? () {
+                    widget.handleAddNewFilter!(widget.stateManager);
+                    // Rebuild to update available columns
+                    setState(() {});
+                  }
+                : null,
+            icon: const Icon(Icons.add),
+            label: Text(
+              hasAvailableColumns ? 'Add More Filters' : 'All columns filtered',
+            ),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              backgroundColor: hasAvailableColumns ? Colors.blue : Colors.grey,
+              foregroundColor: Colors.white,
             ),
           ),
         ],

@@ -53,7 +53,7 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
       return;
     }
 
-    if (stateManager.mode.isPopup && column.type.isSelect && column.field == FilterHelper.filterFieldType) {
+    if (stateManager.mode.isPopup && column.type.isSelect && (column.field == FilterHelper.filterFieldType || column.field == FilterHelper.filterFieldColumn)) {
       if (!stateManager.isCurrentCell(cell)) {
         stateManager.setCurrentCell(cell, rowIdx);
       }

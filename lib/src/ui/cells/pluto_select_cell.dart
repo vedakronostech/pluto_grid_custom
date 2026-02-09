@@ -90,7 +90,7 @@ class PlutoSelectCellState extends State<PlutoSelectCell> with PopupCellState<Pl
   }
 
   bool get _shouldAutoOpenPopup {
-    return widget.stateManager.mode.isPopup && widget.column.field == FilterHelper.filterFieldType;
+    return widget.stateManager.mode.isPopup && (widget.column.field == FilterHelper.filterFieldType || widget.column.field == FilterHelper.filterFieldColumn);
   }
 
   @override
